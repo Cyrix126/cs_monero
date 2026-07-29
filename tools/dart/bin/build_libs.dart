@@ -131,12 +131,38 @@ void main(List<String> args) async {
               "${Platform.pathSeparator}monero_libwallet2_api_c.dll",
         ],
       );
+
+      for (final name in _windowsDlls) {
+        final dll = _windowsDllPath(name);
+        if (!File(dll).existsSync()) {
+          throw Exception(
+            "$dll is missing. The windows package ships it as a commited"
+            " binary; restore it from git before building.",
+          );
+        }
+        await runAsync(
+          "cp",
+          [
+            dll,
+            "${dir.path}"
+                "${Platform.pathSeparator}$name",
+          ],
+        );
+      }
       break;
 
     default:
       throw Exception("Not sure how you got this far tbh");
   }
 }
+
+const _windowsDlls = ["libssp-0.dll", "libwinpthread-1.dll"];
+
+String _windowsDllPath(String name) => "$envProjectDir"
+    "${Platform.pathSeparator}cs_monero_flutter_libs_windows"
+    "${Platform.pathSeparator}windows"
+    "${Platform.pathSeparator}lib"
+    "${Platform.pathSeparator}$name";
 
 /// The tag build_single.sh names its release directory after.
 String _moneroCVersion() {
