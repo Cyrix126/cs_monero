@@ -44,6 +44,11 @@ void main(List<String> args) async {
     for (final coin in coins) {
       await runAsync("./build_single.sh", [coin, triple, "-j$nProc"]);
     }
+
+    // clean unneeded files between triples
+    if (triple != triples.last) {
+      await sbsCleanup();
+    }
   }
 
   Directory.current = thisDir;
@@ -154,6 +159,8 @@ void main(List<String> args) async {
     default:
       throw Exception("Not sure how you got this far tbh");
   }
+
+  await sbsCleanup();
 }
 
 const _windowsDlls = ["libssp-0.dll", "libwinpthread-1.dll"];

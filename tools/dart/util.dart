@@ -23,6 +23,23 @@ Future<void> runAsync(String command, List<String> arguments) async {
   }
 }
 
+/// Clean files between builds to save space.
+/// Keep the shared source files, which can be reused
+/// for the next build
+Future<void> sbsCleanup() {
+  final depends = "$envMoneroCDir"
+      "${Platform.pathSeparator}contrib"
+      "${Platform.pathSeparator}depends";
+
+  return runAsync("sh", [
+    "-c",
+    r'cd "$1" && rm -rf simplybs/_ simplybs/_native _native ./*-*-* '
+        r'simplybs/.buildlib/*_*/work simplybs/.buildlib/*_*/staging',
+    "sh",
+    depends,
+  ]);
+}
+
 /// create some build dirs if they don't already exist
 Future<void> createBuildDirs() async {
   await Future.wait([
