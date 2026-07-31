@@ -28,10 +28,10 @@ void main() async {
     await runAsync('git', ['checkout', kMoneroCHash]);
     await runAsync('git', ['reset', '--hard']);
 
-    // Update submodules
+    // Update the monero submodule
     await runAsync(
       'git',
-      ['submodule', 'update', '--init', '--force', '--recursive'],
+      ['submodule', 'update', '--init', '--force', '--recursive', 'monero'],
     );
 
     // Apply patches
