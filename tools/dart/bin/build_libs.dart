@@ -102,6 +102,9 @@ void main(List<String> args) async {
         frameworkName: "MoneroWallet",
         pathToDylib: xmrDylib,
         targetDirFrameworks: dir.path,
+        layout: platform == "ios"
+            ? FrameworkLayout.flat
+            : FrameworkLayout.versioned,
       );
 
       break;

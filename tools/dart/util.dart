@@ -40,6 +40,18 @@ Future<void> sbsCleanup() {
   ]);
 }
 
+/// Locate a Mach-O toolchain binary
+String mach0ToolPath(String name) {
+  final fromDepends = "$envMoneroCDir"
+      "${Platform.pathSeparator}contrib"
+      "${Platform.pathSeparator}depends"
+      "${Platform.pathSeparator}_native"
+      "${Platform.pathSeparator}bin"
+      "${Platform.pathSeparator}$name";
+
+  return File(fromDepends).existsSync() ? fromDepends : name;
+}
+
 /// create some build dirs if they don't already exist
 Future<void> createBuildDirs() async {
   await Future.wait([
