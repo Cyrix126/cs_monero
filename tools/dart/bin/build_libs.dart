@@ -237,20 +237,13 @@ List<String> _getTriples(String platform) {
 }
 
 String _getNProc(String platform) {
-  final int nProc;
-  if (platform == "ios" || platform == "macos") {
-    final result = Process.runSync("sysctl", ["-n", "hw.physicalcpu"]);
-    if (result.exitCode != 0) {
-      throw Exception("code=${result.exitCode}, stderr=${result.stderr}");
-    }
-    nProc = int.parse(result.stdout.toString());
-  } else {
-    final result = Process.runSync("nproc", []);
-    if (result.exitCode != 0) {
-      throw Exception("code=${result.exitCode}, stderr=${result.stderr}");
-    }
-    nProc = int.parse(result.stdout.toString());
+  final result = Platform.isMacOS
+      ? Process.runSync("sysctl", ["-n", "hw.physicalcpu"])
+      : Process.runSync("nproc", []);
+  if (result.exitCode != 0) {
+    throw Exception("code=${result.exitCode}, stderr=${result.stderr}");
   }
+  final nProc = int.parse(result.stdout.toString());
 
   switch (platform) {
     case "android":
