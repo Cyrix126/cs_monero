@@ -9,6 +9,10 @@ COPY --chown=builder:builder tools/dart/env.dart tools/dart/util.dart \
     tools/dart/create_framework.dart /w/tools/dart/
 COPY --chown=builder:builder tools/dart/bin/build_libs.dart \
     tools/dart/bin/prepare_monero_c.dart /w/tools/dart/bin/
+COPY --chown=builder:builder patches /w/patches
+
+# A reused depends image may embed another pin's checkout; prepare syncs it.
+RUN dart tools/dart/bin/prepare_monero_c.dart
 
 RUN --mount=type=secret,id=simplybs_mirror,uid=1000 \
     --mount=type=bind,source=cs_monero_flutter_libs_windows/windows/lib,target=/w/cs_monero_flutter_libs_windows/windows/lib \

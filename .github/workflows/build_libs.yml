@@ -71,13 +71,7 @@ jobs:
             exit 1
           fi
 
-          hash=$(sed -n 's/.*kMoneroCHash = "\([0-9a-f]*\)".*/\1/p' tools/dart/env.dart)
-          if [ -z "$hash" ]; then
-            echo "::error::Could not read kMoneroCHash from tools/dart/env.dart"
-            exit 1
-          fi
-
-          tag="${hash}-$(builder/builder_id.sh)"
+          tag="$(builder/depends_tree.sh)-$(builder/builder_id.sh)"
 
           prefix="ghcr.io/$(tr 'A-Z' 'a-z' <<< "$REPOSITORY")"
           image="$prefix-depends:$tag"
@@ -111,7 +105,6 @@ jobs:
             echo "depends_targets=$depends_targets"
           } >> "$GITHUB_OUTPUT"
 
-          echo "monero_c pinned at $hash"
           echo "dependency image $image"
           echo "  triples: $depends_targets"
 

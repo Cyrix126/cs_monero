@@ -17,5 +17,5 @@ done
 
 {
   grep -vE '^[[:space:]]*(#|$)' builder/depends.Dockerfile
-  cat $inputs patches/*.patch
+  sed '/^const kMoneroCHash = /d' $inputs patches/*.patch
 } | sha256sum | cut -c1-12
